@@ -32,12 +32,16 @@ add_definitions(-DQT_NO_KEYWORDS)
 qt4_wrap_cpp(MOC_FILES
   include/trianglemesh_display.h
   include/face_selection_tool.h
+  include/mesh_pose_tool.h
+  include/mesh_goal_tool.h
 )
 
 set(SOURCE_FILES
   src/trianglemesh_display.cpp
   src/trianglemesh_visual.cpp
   src/face_selection_tool.cpp
+  src/mesh_pose_tool.cpp
+  src/mesh_goal_tool.cpp
   ${MOC_FILES}
 )
 
