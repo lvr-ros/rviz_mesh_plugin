@@ -91,6 +91,17 @@ FaceSelectionTool::~FaceSelectionTool()
   scene_manager->destroySceneNode(scene_node);
 }
 
+void FaceSelectionTool::updateTopic(){
+  //if(mesh_topic->getTopic() != QString::fromStdString(mesh_sub.getTopic())){
+    ROS_INFO("updated topic");
+    mesh_sub.shutdown();
+    mesh_sub = n.subscribe(mesh_topic->getTopic().toStdString(), 1, &FaceSelectionTool::meshCb, this);
+    reference_mesh->clear();
+    has_mesh = false;
+    context_->queueRender();
+  //}
+}
+
 // onInitialize() is called by the superclass after scene_manager_ and
 // context_ are set.  It should be called only once per instantiation.
 void FaceSelectionTool::onInitialize()
@@ -99,6 +110,7 @@ void FaceSelectionTool::onInitialize()
 
   initNode();
   initOgre();
+  updateTopic();
 }
 
 void FaceSelectionTool::initOgre()
@@ -149,18 +161,11 @@ void FaceSelectionTool::initNode()
 {
   mesh_sub = n.subscribe( "segment_mesh", 1, &FaceSelectionTool::meshCb, this);
   mesh_pub = n.advertise<mesh_msgs::TriangleMeshStamped>( "segmented_mesh", 1, true);
+  
   id_pub = n.advertise<std_msgs::Int32>( "selected_face_id", 1, true);
+  goal_pub = n.advertise<geometry_msgs::PoseStamped>( "goal", 1, true );
 }
 
-void FaceSelectionTool::updateTopic(){
-  //if(mesh_topic->getTopic() != QString::fromStdString(mesh_sub.getTopic())){
-    mesh_sub.shutdown();
-    mesh_sub = n.subscribe(mesh_topic->getTopic().toStdString(), 1, &FaceSelectionTool::meshCb, this);
-    reference_mesh->clear();
-    has_mesh = false;
-    context_->queueRender();
-  //}
-}
 
 void FaceSelectionTool::meshCb(const mesh_msgs::TriangleMeshStamped::ConstPtr& mesh)
 {
@@ -411,10 +416,11 @@ void FaceSelectionTool::selectSingleFace(rviz::ViewportMouseEvent& event)
   Ogre::Ray ray;
   size_t goalSection = -1 ;
   size_t goalIndex = -1;
+  Ogre::Real dist = -1;
 
   if ( singleRayQuery( event, num_results, ray) )
   {
-    getIdentityOfSingleFace(reference_mesh, ray, goalSection, goalIndex);
+    getIdentityOfSingleFace(reference_mesh, ray, goalSection, goalIndex, dist);
 
     if (goalIndex != -1)
     {
@@ -422,6 +428,17 @@ void FaceSelectionTool::selectSingleFace(rviz::ViewportMouseEvent& event)
       std_msgs::Int32 index;
       index.data = goalIndex / 3;
       id_pub.publish(index);
+
+
+      Ogre::Vector3 goal = ray.getPoint(dist);
+      geometry_msgs::PoseStamped goal_msg;
+      goal_msg.header.stamp = ros::Time::now();
+      goal_msg.header.frame_id = context_->getFixedFrame().toStdString();
+      goal_msg.pose.position.x = goal.x;
+      goal_msg.pose.position.y = goal.y;
+      goal_msg.pose.position.z = goal.z;
+
+      goal_pub.publish(goal_msg);
 
       if (m_goalFaces.find( goalSection ) == m_goalFaces.end())
       {
@@ -443,10 +460,11 @@ void FaceSelectionTool::deselectSingleFace(rviz::ViewportMouseEvent& event)
   Ogre::Ray ray;
   size_t goalSection = -1 ;
   size_t goalIndex = -1;
+  Ogre::Real dist = -1;
 
   if ( singleRayQuery( event, num_results, ray) )
   {
-    getIdentityOfSingleFace(reference_mesh, ray, goalSection, goalIndex);
+    getIdentityOfSingleFace(reference_mesh, ray, goalSection, goalIndex, dist);
 
     if (m_goalFaces.find(goalSection) != m_goalFaces.end())
     {
@@ -470,9 +488,10 @@ void FaceSelectionTool::deselectSingleFace(rviz::ViewportMouseEvent& event)
 void FaceSelectionTool::getIdentityOfSingleFace(Ogre::ManualObject* mesh,
                                         Ogre::Ray &ray,
                                         size_t &goalSection,
-                                        size_t &goalIndex)
+                                        size_t &goalIndex,
+                                        Ogre::Real& closestDistance)
 {
-  Ogre::Real closestDistance = -1.0f;
+  closestDistance = -1.0f;
   size_t vertexCount = 0;
   Ogre::Vector3* vertices;
   size_t indexCount = 0;
