@@ -72,6 +72,7 @@
 #include <rviz/display_group.h>
 
 #include <geometry_msgs/Point32.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <mesh_msgs/TriangleMeshStamped.h>
 #include <std_msgs/Int32.h>
 
@@ -138,11 +139,14 @@ public:
   bool areFacesSelected();
   void getSelectedFaces(size_t goalSection, std::string regionLabel, mesh_msgs::TriangleMesh &meshMsg);
 
+
+private Q_SLOTS:
+    void updateTopic();
+
 private:
 
     void initNode();
     void initOgre();
-    void updateTopic();
 
     void updateSelectionMesh();
 
@@ -160,7 +164,8 @@ private:
     void getIdentityOfSingleFace(Ogre::ManualObject* mesh,
                                  Ogre::Ray &ray,
                                  size_t &goalSection,
-                                 size_t &goalIndex);
+                                 size_t &goalIndex,
+                                 Ogre::Real& dist);
 
     void getRawManualObjectData(Ogre::ManualObject *mesh,
                                 size_t sectionNumber,
@@ -187,6 +192,7 @@ private:
     ros::Subscriber mesh_sub;
     ros::Publisher mesh_pub;
     ros::Publisher id_pub;
+    ros::Publisher goal_pub;
     int num_results;
     bool has_mesh;
 
