@@ -65,9 +65,6 @@
 #include "trianglemesh_visual.h"
 #endif
 
-#include <mesh_msgs/TriangleMeshStamped.h>
-#include <lvr_ros/PointNormals.h>
-
 namespace rviz
 {
 

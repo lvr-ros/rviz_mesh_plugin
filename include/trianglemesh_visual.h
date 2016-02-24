@@ -51,7 +51,6 @@
 #ifndef TRIANGLEMESH_VISUAL_H
 #define TRIANGLEMESH_VISUAL_H
 
-#include <lvr_ros/PointNormals.h>
 #include <mesh_msgs/TriangleMeshStamped.h>
 
 #include <rviz/display_context.h>
