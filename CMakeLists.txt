@@ -12,12 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package()
-#catkin_package(
-#  INCLUDE_DIRS include
-#  CATKIN_DEPENDS ${THIS_PACKAGE_ROS_DEPS}
-#  DEPENDS Qt4
-#  LIBRARIES rviz_mesh_plugin
-#)
 
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
@@ -37,23 +31,7 @@ else()
   set(QT_LIBRARIES Qt5::Widgets)
 endif()
 
-#find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
-#include(${QT_USE_FILE})
-
-#include_directories(
-#  include
-#  ${catkin_INCLUDE_DIRS}  
-#  ${QT_INCLUDE_DIRS}
-#)
-
 add_definitions(-DQT_NO_KEYWORDS)
-
-#qt4_wrap_cpp(MOC_FILES
-#  include/rviz_mesh_plugin/trianglemesh_display.h
-#  include/rviz_mesh_plugin/face_selection_tool.h
-#  include/rviz_mesh_plugin/mesh_pose_tool.h
-#  include/rviz_mesh_plugin/mesh_goal_tool.h
-#)
 
 set(SOURCE_FILES
   src/trianglemesh_display.cpp
@@ -61,7 +39,6 @@ set(SOURCE_FILES
   src/face_selection_tool.cpp
   src/mesh_pose_tool.cpp
   src/mesh_goal_tool.cpp
-  #${MOC_FILES}
 )
 
 add_library(rviz_mesh_plugin ${SOURCE_FILES})
@@ -80,6 +57,3 @@ install(FILES
 install(DIRECTORY icons/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/icons)
 
-# Install headers
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
