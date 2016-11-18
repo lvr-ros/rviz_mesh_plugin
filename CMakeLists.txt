@@ -5,8 +5,7 @@ set(THIS_PACKAGE_ROS_DEPS
   roscpp
   rviz
   std_msgs
-  mesh_msgs
-  lvr_ros)
+  mesh_msgs)
 
 find_package(catkin REQUIRED COMPONENTS 
   ${THIS_PACKAGE_ROS_DEPS} 

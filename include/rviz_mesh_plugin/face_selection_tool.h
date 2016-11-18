@@ -76,8 +76,6 @@
 #include <mesh_msgs/TriangleMeshStamped.h>
 #include <std_msgs/Int32.h>
 
-#include <lvr_ros/lvr_ros_conversions.h>
-
 #ifndef Q_MOC_RUN
 #include <rviz/mesh_loader.h>
 
