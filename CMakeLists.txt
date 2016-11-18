@@ -19,7 +19,7 @@ catkin_package()
 #  LIBRARIES rviz_mesh_plugin
 #)
 
-include_directories(${catkin_INCLUDE_DIRS} include)
+include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 
 ## This setting causes Qt's "MOC" generation to happen automatically.
