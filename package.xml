@@ -1,22 +1,26 @@
 <package>
   <name>rviz_mesh_plugin</name>
   <description>
-    RViz display types for the mesh_msgs package.
+    RViz display types and tools for the mesh_msgs package.
   </description>
   <version>1.0.0</version>
-  <maintainer email="hdeeken@uos.de">Henning Deeken</maintainer>
-  <author email="hdeeken@uos.de">Henning Deeken</author>
+  <maintainer email="spuetz@uos.de">Sebastian Pütz</maintainer>
   <author email="spuetz@uos.de">Sebastian Pütz</author>
+  <author email="hdeeken@uos.de">Henning Deeken</author>
   <author email="mmrozins@uos.de">Marcel Mrozinski</author>
   <buildtool_depend>catkin</buildtool_depend>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/rviz_mesh_plugin</url>
+  <build_depend>qtbase5-dev</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rviz</build_depend>
   <build_depend>lvr_ros</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>mesh_msgs</build_depend>
+  <run_depend>libqt5-core</run_depend>
+  <run_depend>libqt5-gui</run_depend>
+  <run_depend>libqt5-widgets</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rviz</run_depend>
   <run_depend>lvr_ros</run_depend>
